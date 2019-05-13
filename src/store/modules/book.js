@@ -14,12 +14,12 @@ const book = {
     section: 0, // 当前章节的位置  0：第一章节
     cover: null, // 电子书图片路径
     metadata: null, // 电子书标题作者信息
-    navigation: null // 电子书目录
+    navigation: null, // 电子书目录
     // isPaginating: true,
     // paginate: '',
     // pagelist: null,
-    // offsetY: 0,
-    // isBookmark: null,
+    offsetY: 0, // 书签功能，Y轴偏移量
+    isBookmark: null // 当前页是否为书签页
     // speakingIconBottom: realPx(58)
   },
   mutations: {
@@ -67,19 +67,19 @@ const book = {
     },
     'SET_METADATA': (state, metadata) => {
       state.metadata = metadata
-    }
+    },
     // 'SET_PAGINATE': (state, paginate) => {
     //   state.paginate = paginate
     // },
     // 'SET_PAGELIST': (state, pagelist) => {
     //   state.pagelist = pagelist
     // },
-    // 'SET_OFFSETY': (state, offsetY) => {
-    //   state.offsetY = offsetY
-    // },
-    // 'SET_IS_BOOKMARK': (state, isBookmark) => {
-    //   state.isBookmark = isBookmark
-    // },
+    'SET_OFFSETY': (state, offsetY) => {
+      state.offsetY = offsetY
+    },
+    'SET_IS_BOOKMARK': (state, isBookmark) => {
+      state.isBookmark = isBookmark
+    }
     // 'SET_SPEAKING_ICON_BOTTOM': (state, speakingIconBottom) => {
     //   state.speakingIconBottom = speakingIconBottom
     // }

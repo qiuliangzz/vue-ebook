@@ -1,7 +1,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList } from './book';
 import { addCss, removeAllCss, getReadTimeByMinute } from './utils';
-import { saveLocation } from './localStorage';
+import { saveLocation, getBookmark } from './localStorage';
 
 export const ebookMixin = {
   // 计算属性，方法等
@@ -21,7 +21,9 @@ export const ebookMixin = {
         "section",
         "cover",
         "metadata",
-        "navigation"
+        "navigation",
+        "offsetY",
+        "isBookmark"
       ]
     ),
     themeList() {
@@ -44,7 +46,9 @@ export const ebookMixin = {
         "setSection",
         "setCover",
         "setMetadata",
-        "setNavigation"
+        "setNavigation",
+        "setOffsetY",
+        "setIsBookmark"
       ]
     ),
     // 隐藏标题栏和底部栏
@@ -84,9 +88,19 @@ export const ebookMixin = {
         this.setProgress(Math.floor(progress * 100));
         this.setSection(currentLocation.start.index)
         saveLocation(this.fileName, startCfi);
+        const bookmark = getBookmark(this.fileName)
+        if (bookmark) {
+          if (bookmark.some(item => item.cfi === startCfi)) {
+            this.setIsBookmark(true);
+          } else {
+            this.setIsBookmark(false);
+          }
+        } else {
+          this.setIsBookmark(false);
+        }
       }
     },
-    // 展示电子书内部
+    // 展示电子书内部，渲染目标页面
     display(target, cb) {
       if (target) {
         this.currentBook.rendition.display(target).then(() => {

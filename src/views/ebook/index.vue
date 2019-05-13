@@ -1,8 +1,9 @@
 <template>
-  <div class="ebook">
+  <div class="ebook" ref="ebook">
     <EbookTitle></EbookTitle>
     <EbookReader></EbookReader>
     <EbookMenu></EbookMenu>
+    <EookBookmark></EookBookmark>
   </div>
 </template>
 
@@ -12,15 +13,18 @@
 import EbookReader from "../../components/ebook/EbookReader";
 import EbookTitle from "../../components/ebook/EbookTitle";
 import EbookMenu from "../../components/ebook/EbookMenu";
+import EookBookmark from "../../components/ebook/EookBookmark";
 import { getReadTime, saveReadTime } from "../../utils/localStorage";
 import { ebookMixin } from "../../utils/mixin";
+import { setTimeout } from "timers";
 
 export default {
   // import引入的组件需要注入到对象中才能使用
   components: {
     EbookReader,
     EbookTitle,
-    EbookMenu
+    EbookMenu,
+    EookBookmark
   },
   data() {
     // 这里存放数据
@@ -31,9 +35,33 @@ export default {
   // 监听属性 类似于data概念
   computed: {},
   // 监控data中的数据变化
-  watch: {},
+  watch: {
+    offsetY(v) {
+      // 下拉
+      // 显示标题栏和分页未成功时，不可下拉
+      if (!this.menuVisible && this.bookAvailable) {
+        if (v > 0) {
+          this.move(v);
+        } else if (v === 0) {
+          this.restore();
+        }
+      }
+    }
+  },
   // 方法集合
   methods: {
+    // 下拉页面手势功能
+    move(v) {
+      this.$refs.ebook.style.top = v + "px";
+    },
+    // 下拉恢复
+    restore() {
+      this.$refs.ebook.style.top = 0;
+      this.$refs.ebook.style.transition = "all .2s linear";
+      setTimeout(() => {
+        this.$refs.ebook.style.transition = "";
+      }, 200);
+    },
     startLoopReadTime() {
       let readTime = getReadTime(this.fileName);
       if (!readTime) {
@@ -69,4 +97,11 @@ export default {
 <style lang='scss' scoped>
 // @import ""; 引入公共css类
 @import "../../assets/styles/global";
+.ebook {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 </style>
