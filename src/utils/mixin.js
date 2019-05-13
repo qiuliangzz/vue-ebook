@@ -28,6 +28,10 @@ export const ebookMixin = {
     ),
     themeList() {
       return themeList(this)
+    },
+    // 获取章节名称
+    getSectionName() {
+      return this.section ? this.navigation[this.section].label : ''
     }
   },
   methods: {

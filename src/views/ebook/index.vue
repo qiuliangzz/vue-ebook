@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
+    <EbookHeader></EbookHeader>
     <EbookTitle></EbookTitle>
     <EbookReader></EbookReader>
     <EbookMenu></EbookMenu>
     <EookBookmark></EookBookmark>
+    <EbookFooter></EbookFooter>
   </div>
 </template>
 
@@ -14,6 +16,8 @@ import EbookReader from "../../components/ebook/EbookReader";
 import EbookTitle from "../../components/ebook/EbookTitle";
 import EbookMenu from "../../components/ebook/EbookMenu";
 import EookBookmark from "../../components/ebook/EookBookmark";
+import EbookHeader from "../../components/ebook/EbookHeader";
+import EbookFooter from "../../components/ebook/EbookFooter";
 import { getReadTime, saveReadTime } from "../../utils/localStorage";
 import { ebookMixin } from "../../utils/mixin";
 import { setTimeout } from "timers";
@@ -24,7 +28,9 @@ export default {
     EbookReader,
     EbookTitle,
     EbookMenu,
-    EookBookmark
+    EookBookmark,
+    EbookHeader,
+    EbookFooter
   },
   data() {
     // 这里存放数据

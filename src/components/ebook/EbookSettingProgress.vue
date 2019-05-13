@@ -43,12 +43,6 @@ export default {
   data() {
     return {};
   },
-  computed: {
-    // 获取章节名称
-    getSectionName() {
-      return this.section ? this.navigation[this.section].label : "";
-    }
-  },
   mixins: [ebookMixin],
   methods: {
     // 进度条拖动离手后的调用方法
