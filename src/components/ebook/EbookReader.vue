@@ -2,7 +2,15 @@
   <div class="ebook-reader">
     <div id="read"></div>
     <!-- 蒙版 -->
-    <div class="ebook-reader-mask" @click="onMaskClick" @touchmove="move" @touchend="moveEnd"></div>
+    <div
+      class="ebook-reader-mask"
+      @click="onMaskClick"
+      @touchmove="move"
+      @touchend="moveEnd"
+      @mousedown.left="onMouseEnter"
+      @mousemove.left="onMouseMove"
+      @mouseup.left="onMouseEnd"
+    ></div>
   </div>
 </template>
 
@@ -90,29 +98,7 @@ export default {
         ]).then(() => {});
       });
     },
-    // 初始化手势操作
-    initGesture() {
-      this.rendition.on("touchstart", e => {
-        this.touchStartX = e.changedTouches[0].clientX;
-        this.touchStartTime = e.timeStamp;
-      });
-      this.rendition.on("touchend", e => {
-        const offsetX = e.changedTouches[0].clientX - this.touchStartX;
-        const time = e.timeStamp - this.touchStartTime;
-        if (time < 500 && offsetX > 40) {
-          // 从左往右，上一页
-          this.prevPage();
-        } else if (time < 500 && offsetX < -40) {
-          // 从右往左,下一页
-          this.nextPage();
-        } else {
-          // 显示头部标题
-          this.toggleTitleAndMenu();
-        }
-        e.preventDefault();
-        e.stopPropagation();
-      });
-    },
+
     // 初始化字号，离线缓存
     initFontSize() {
       let fontSize = getFontSize(this.fileName);
@@ -147,8 +133,34 @@ export default {
       // 选择默认样式
       this.rendition.themes.select(defaultTheme);
     },
+    // 初始化手势操作
+    initGesture() {
+      this.rendition.on("touchstart", e => {
+        this.touchStartX = e.changedTouches[0].clientX;
+        this.touchStartTime = e.timeStamp;
+      });
+      this.rendition.on("touchend", e => {
+        const offsetX = e.changedTouches[0].clientX - this.touchStartX;
+        const time = e.timeStamp - this.touchStartTime;
+        if (time < 500 && offsetX > 40) {
+          // 从左往右，上一页
+          this.prevPage();
+        } else if (time < 500 && offsetX < -40) {
+          // 从右往左,下一页
+          this.nextPage();
+        } else {
+          // 显示头部标题
+          this.toggleTitleAndMenu();
+        }
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    },
     // 点击事件
     onMaskClick(e) {
+      if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
+        return;
+      }
       const offsetX = e.offsetX;
       const width = window.innerWidth;
       if (offsetX > 0 && offsetX < width * 0.3) {
@@ -175,6 +187,51 @@ export default {
       this.setOffsetY(0);
       this.firstOffsetY = null;
     },
+    // 鼠标事件
+    // 1- 鼠标进入
+    // 2- 鼠标进入后的移动
+    // 3- 鼠标从移动状态松手
+    // 4- 鼠标还原
+    onMouseEnter(e) {
+      // 点击鼠标左键，鼠标进入
+      this.mouseState = 1;
+      this.mouseStartTime = e.timeStamp;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    onMouseMove(e) {
+      // 鼠标移动
+      if (this.mouseState === 1) {
+        this.mouseState = 2;
+      } else if (this.mouseState === 2) {
+        let offsetY = 0;
+        if (this.firstOffsetY) {
+          offsetY = e.clientY - this.firstOffsetY;
+          this.setOffsetY(offsetY);
+        } else {
+          this.firstOffsetY = e.clientY;
+        }
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    onMouseEnd(e) {
+      // 鼠标松开
+      if (this.mouseState === 2) {
+        this.setOffsetY(0);
+        this.firstOffsetY = null;
+        this.mouseState = 3;
+      } else {
+        this.mouseState = 4;
+      }
+      // 解决误点问题优化
+      const time = e.timeStamp - this.mouseStartTime;
+      if (time < 100) {
+        this.mouseState = 4;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    },
     // 上一页
     prevPage() {
       if (this.rendition) {
@@ -193,6 +250,7 @@ export default {
         this.hideTitleAndMenu();
       }
     },
+
     // 切换显示标题栏和底部栏
     toggleTitleAndMenu() {
       // this.$store.dispatch("setMenuVisible", !this.menuVisible);
@@ -252,7 +310,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 150;
     width: 100%;
     height: 100%;
     background: transparent;

@@ -46,6 +46,12 @@ const actions = {
   },
   setIsBookmark: ({ commit }, isBookmark) => {
     return commit('SET_IS_BOOKMARK', isBookmark)
+  },
+  setHotSearchOffsetY: ({ commit }, offsetY) => {
+    return commit('SET_HOT_SEARCH_OFFSETY', offsetY)
+  },
+  setFlapCardVisible: ({ commit }, flapCardVisible) => {
+    return commit('SET_FLAP_CARD_VISIBLE', flapCardVisible)
   }
 };
 export default actions;

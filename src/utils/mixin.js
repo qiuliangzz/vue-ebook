@@ -124,3 +124,24 @@ export const ebookMixin = {
     }
   }
 }
+
+export const storeHomeMixin = {
+  computed: {
+    ...mapGetters([
+      'offsetY',
+      'hotSearchOffsetY',
+      'flapCardVisible'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setOffsetY',
+      'setHotSearchOffsetY',
+      'setFlapCardVisible'
+    ]),
+    // 跳转图书详情页
+    showBookDetail(book) {
+      console.log(book);
+    }
+  }
+}

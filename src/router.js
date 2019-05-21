@@ -1,25 +1,39 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Ebook from './views/ebook/index.vue'
-import EbookReader from './components/ebook/EbookReader.vue'
 
+// 注册路由
 Vue.use(Router)
 
+// 实例化路由对象
 export default new Router({
+  // 定义路由规则
   routes: [
     {
       path: '/',
-      redirect: '/ebook'
+      redirect: '/store'
+    },
+    {
+      path: '/store',
+      name: 'store',
+      component: () => import('./views/ebookstore/index.vue'),
+      redirect: '/store/home',
+      children: [
+        {
+          path: '/store/home',
+          name: 'home',
+          component: () => import('./views/ebookstore/StoreHome.vue')
+        }
+      ]
     },
     {
       path: '/ebook',
       name: 'ebook',
-      component: Ebook,
+      component: () => import('./views/ebook/index.vue'),
       children: [
         // 动态路由，以:作为起点，后跟接收的参数名称
         {
           path: ':fileName',
-          component: EbookReader
+          component: () => import('./components/ebook/EbookReader.vue')
         }
       ]
     }

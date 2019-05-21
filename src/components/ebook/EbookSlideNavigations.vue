@@ -26,8 +26,12 @@
         <img :src="cover" class="slide-contents-book-img">
       </div>
       <div class="slide-contents-book-info-wrapper">
-        <div class="slide-contents-book-title">{{metadata.title}}</div>
-        <div class="slide-contents-book-author">{{metadata.creator}}</div>
+        <div class="slide-contents-book-title">
+          <span class="slide-contents-book-title-text">{{metadata.title}}</span>
+        </div>
+        <div class="slide-contents-book-author">
+          <span class="slide-contents-book-author-text">{{metadata.creator}}</span>
+        </div>
       </div>
       <div class="slide-contents-book-progress-wrapper">
         <div class="slide-contents-book-progress">
@@ -190,16 +194,22 @@ export default {
       padding: 0 rem(10);
       .slide-contents-book-title {
         /* 375*0.85=318.75-30=288.75 -20=268.75-45=223.75-70=153.75*/
-        width: rem(153.75);
+        /* width: rem(153.75); */
         font-size: rem(14);
         line-height: rem(16);
-        @include ellipsis2(2);
+        @include left;
+        .slide-contents-book-title-text {
+          @include ellipsis2(2);
+        }
       }
       .slide-contents-book-author {
-        width: rem(153.75);
+        /* width: rem(153.75); */
         font-size: rem(12);
-        @include ellipsis;
         margin-top: rem(5);
+        @include left;
+        .slide-contents-book-author-text {
+          @include ellipsis2(1);
+        }
       }
     }
     .slide-contents-book-progress-wrapper {

@@ -46,6 +46,7 @@ export default {
     scrollTo(x, y) {
       this.$refs.scrollWrapper.scrollTo(x, y);
     },
+    // 重新计算高度（刷新）
     refresh() {
       if (this.$refs.scrollWrapper) {
         this.$refs.scrollWrapper.style.height =

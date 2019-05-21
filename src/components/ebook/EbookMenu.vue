@@ -26,17 +26,6 @@
     <EbookSettingTheme></EbookSettingTheme>
     <EbookSettingProgress></EbookSettingProgress>
     <EbookSlide></EbookSlide>
-    <!-- 
-    <content-view
-      :ifShowContent="ifShowContent"
-      v-show="ifShowContent"
-      :navigation="navigation"
-      :bookAvailable="bookAvailable"
-      @jumpTo="jumpTo"
-    ></content-view>
-    <transition name="fade">
-      <div class="content-mask" v-show="ifShowContent" @click="hideContent"></div>
-    </transition>-->
   </div>
 </template>
 

@@ -1,3 +1,5 @@
+$animationTime: 0.2s;
+$animationType: linear;
 $ratio: 375 / 10;
 
 @function rem($px) {
@@ -92,6 +94,7 @@ $ratio: 375 / 10;
   align-items: flex-start;
 }
 
+// 绝对定位实现垂直水平居中
 @mixin absCenter {
   position: absolute;
   left: 0;
@@ -139,4 +142,12 @@ $ratio: 375 / 10;
   }
 }
 
-
+.icon {
+  color: #666;
+  font-size: rem(16);
+}
+.title {
+  color: #666;
+  font-size: rem(16);
+  font-weight: bold;
+}
