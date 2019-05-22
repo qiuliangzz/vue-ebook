@@ -111,7 +111,11 @@ export default {
       } else {
         this.hideShadow();
       }
-      this.hideHotSearch();
+      if( this.hotSearchVisible) {
+        this.hideHotSearch()
+      } else {
+        this.$router.push('/shelf')
+      }
     },
     // 显示翻转卡片
     showFlapCard() {

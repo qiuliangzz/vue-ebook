@@ -36,6 +36,11 @@ export default new Router({
       ]
     },
     {
+      path: '/shelf',
+      name: 'shelf',
+      component: () => import('./views/shelf/index.vue')
+    },
+    {
       path: '/ebook',
       name: 'ebook',
       component: () => import('./views/ebook/index.vue'),

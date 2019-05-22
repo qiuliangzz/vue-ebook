@@ -1,7 +1,7 @@
 const bookstore = {
   state: {
-    hotSearchOffsetY: 0,
-    flapCardVisible: false
+    hotSearchOffsetY: 0, // 热门搜索Y轴偏移量
+    flapCardVisible: false // 翻转盒子是否显示
   },
   mutations: {
     'SET_HOT_SEARCH_OFFSETY': (state, offsetY) => {

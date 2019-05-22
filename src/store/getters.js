@@ -16,6 +16,10 @@ const book = {
   offsetY: state => state.book.offsetY,
   isBookmark: state => state.book.isBookmark,
   hotSearchOffsetY: state => state.bookstore.hotSearchOffsetY,
-  flapCardVisible: state => state.bookstore.flapCardVisible
+  flapCardVisible: state => state.bookstore.flapCardVisible,
+  isEditMode: state => state.bookshelf.isEditMode,
+  shelfList: state => state.bookshelf.shelfList,
+  shelfSelected: state => state.bookshelf.shelfSelected,
+  shelfTitleVisible: state => state.bookshelf.shelfTitleVisible
 };
 export default book;
