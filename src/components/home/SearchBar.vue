@@ -26,6 +26,7 @@
             :placeholder="$t('home.hint')"
             v-model="searchText"
             @click="showHotSearch"
+            @keyup.13.exact="search"
           >
         </div>
       </div>
@@ -115,6 +116,15 @@ export default {
     // 显示翻转卡片
     showFlapCard() {
       this.setFlapCardVisible(true);
+    },
+    // 搜索功能
+    search() {
+      this.$router.push({
+        path: "/store/list",
+        query: {
+          keyword: this.searchText
+        }
+      });
     }
   },
   created() {},

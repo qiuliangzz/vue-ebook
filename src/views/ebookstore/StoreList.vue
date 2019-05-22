@@ -53,21 +53,7 @@ export default {
     };
   },
   methods: {
-    getCategoryText(key) {
-      return `${categoryText(categoryList[key], this)}(${
-        this.list[key].length
-      })`;
-    },
-    back() {
-      this.$router.go(-1);
-    },
-    onScroll(offsetY) {
-      if (offsetY > realPx(42)) {
-        this.$refs.title.showShadow();
-      } else {
-        this.$refs.title.hideShadow();
-      }
-    },
+    // 获取列表
     getList() {
       list().then(response => {
         this.list = response.data.data;
@@ -82,14 +68,31 @@ export default {
           this.list = {};
           this.list[key] = data;
         } else if (keyword) {
+          // 搜索算法：有keyword的保留，没有的剔除
           Object.keys(this.list).filter(key => {
+            // 找到keyword包含在fileName中的数组，并且长度大于0，
             this.list[key] = this.list[key].filter(
-              book => book.fileName.indexOf(keyword) >= 0
+              book => book.fileName.indexOf(keyword) !== -1
             );
             return this.list[key].length > 0;
           });
         }
       });
+    },
+    getCategoryText(key) {
+      return `${categoryText(categoryList[key], this)}(${
+        this.list[key].length
+      })`;
+    },
+    back() {
+      this.$router.go(-1);
+    },
+    onScroll(offsetY) {
+      if (offsetY > realPx(42)) {
+        this.$refs.title.showShadow();
+      } else {
+        this.$refs.title.hideShadow();
+      }
     }
   },
   created() {
