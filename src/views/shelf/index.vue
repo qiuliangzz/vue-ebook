@@ -32,27 +32,21 @@ export default {
       this.setOffsetY(offsetY);
     },
     // 获取列表数据
-    getBookShelf() {
+    getShelfList() {
       shelf().then(response => {
-        const { data } = response;
-        console.log(data);
-        // this.shelfList = data.bookList;
-        // if (!this.shelfList) {
-        //   this.shelfList = [];
-        // }
+        if (
+          response.status === 200 &&
+          response.data &&
+          response.data.bookList
+        ) {
+          const { data } = response;
+          this.setShelfList(data.bookList);
+        }
       });
-      this.initBookShelf();
-    },
-    initBookShelf() {
-      if (this.bookList) {
-        this.bookList.forEach(item => {
-          item.selected = false;
-        });
-      }
     }
   },
   created() {
-    this.getBookShelf();
+    this.getShelfList();
   },
   mounted() {}
 };

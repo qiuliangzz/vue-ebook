@@ -25,6 +25,6 @@ export function detail(book) {
 export function shelf() {
   return axios({
     method: 'get',
-    url: `${process.env.VUE_APP_BASE_URL}/book/shelf`
+    url: `${process.env.VUE_APP_BASE_URL}/shelf`
   })
 }
