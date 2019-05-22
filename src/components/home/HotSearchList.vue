@@ -1,3 +1,4 @@
+<!-- 热门搜索 -->
 <template>
   <transition name="hot-search">
     <scroll class="hot-search-wrapper" :top="52" @onScroll="onScroll" ref="scroll">

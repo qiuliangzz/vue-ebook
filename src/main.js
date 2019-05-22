@@ -5,6 +5,9 @@ import store from './store'
 import '@/assets/styles/icon.css'
 import i18n from './language'
 import './mock'
+// 图片懒加载
+import VueLazyload from 'vue-lazyload'
+Vue.use(VueLazyload)
 Vue.config.productionTip = false
 
 new Vue({
