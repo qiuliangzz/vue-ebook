@@ -141,7 +141,13 @@ export const storeHomeMixin = {
     ]),
     // 跳转图书详情页
     showBookDetail(book) {
-      console.log(book);
+      this.$router.push({
+        path: '/store/detail',
+        query: {
+          fileName: book.fileName,
+          category: book.categoryText
+        }
+      })
     }
   }
 }

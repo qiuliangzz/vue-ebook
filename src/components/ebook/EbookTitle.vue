@@ -29,7 +29,7 @@ export default {
   mixins: [ebookMixin],
   methods: {
     back() {
-      console.log("back");
+      this.$router.go(-1)
     }
   },
   created() {},
@@ -46,7 +46,7 @@ export default {
   width: 100%;
   height: rem(48);
   background: white;
-  z-index: 100;
+  z-index: 999;
   box-shadow: 0 rem(8) rem(8) rgba(0, 0, 0, 0.15);
   font-size: rem(20);
   .left {

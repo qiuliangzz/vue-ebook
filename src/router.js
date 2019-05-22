@@ -22,6 +22,16 @@ export default new Router({
           path: '/store/home',
           name: 'home',
           component: () => import('./views/ebookstore/StoreHome.vue')
+        },
+        {
+          path: '/store/list',
+          name: 'list',
+          component: () => import('./views/ebookstore/StoreList.vue')
+        },
+        {
+          path: '/store/detail',
+          name: 'detail',
+          component: () => import('./views/ebookstore/StoreDetail.vue')
         }
       ]
     },

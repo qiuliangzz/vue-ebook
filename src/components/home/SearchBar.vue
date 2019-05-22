@@ -37,7 +37,6 @@
 <script>
 import { storeHomeMixin } from "../../utils/mixin";
 import HotSearchList from "./HotSearchList";
-import { truncate } from "fs";
 
 export default {
   components: {
