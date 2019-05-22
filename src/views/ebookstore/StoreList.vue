@@ -1,3 +1,4 @@
+<!-- 书城列表页 -->
 <template>
   <div class="book-list-wrapper">
     <detail-title :title="title" :showShelf="true" @back="back" ref="title"></detail-title>

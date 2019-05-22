@@ -1,3 +1,4 @@
+<!-- 书城详情页 -->
 <template>
   <div class="book-detail">
     <detail-title @back="back" :showShelf="true" ref="title"></detail-title>
