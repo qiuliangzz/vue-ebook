@@ -329,8 +329,6 @@ export default {
             color: #333;
           }
         }
-        #preview {
-        }
         .book-detail-content-item-wrapper {
           .book-detail-content-item {
             padding: rem(15) 0;
