@@ -7,7 +7,8 @@ import i18n from './language'
 // mock.js 下载问题，只能使用文本不能使用block对象，使用其他方法使用mock，如vue.config.js文件中进行接口模拟
 // import './mock'
 // 图片懒加载
-import './lazy'
+import './utils/lazy'
+import './utils/create-api'
 Vue.config.productionTip = false
 
 new Vue({

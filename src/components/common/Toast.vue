@@ -1,7 +1,7 @@
-<!-- 弹窗组件 -->
+<!-- 提示信息弹窗组件 -->
 <template>
   <transition name="fade">
-    <div class="toast-bg" v-show="visible">
+    <div class="toast-bg" v-if="visible">
       <div class="toast-wrapper">
         <div class="toast" v-html="text"></div>
       </div>
@@ -11,6 +11,7 @@
 
 <script>
   export default {
+    name:'toast',
     props: {
       text: [String, Number],
       timeout: {
@@ -51,7 +52,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: 0 0 0 -50%;
+    margin: -50% 0 0 -50%;
     z-index: 2500;
     width: 100%;
     @include center;
@@ -59,7 +60,6 @@
       width: 60%;
       line-height: rem(20);
       padding: rem(10) rem(20);
-      box-sizing: border-box;
       background: #ccc;
       border-radius: rem(10);
       font-size: rem(14);
