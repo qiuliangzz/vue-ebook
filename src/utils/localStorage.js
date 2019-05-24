@@ -82,6 +82,7 @@ export function getReadTime(fileName) {
 export function saveReadTime(fileName, theme) {
   setBookObject(fileName, 'time', theme)
 }
+
 // 获取、保存书签
 export function getBookmark(fileName) {
   return getBookObject(fileName, 'bookmark')
@@ -89,4 +90,13 @@ export function getBookmark(fileName) {
 
 export function saveBookmark(fileName, bookmark) {
   setBookObject(fileName, 'bookmark', bookmark)
+}
+
+// 获取、保存书架
+export function getShelf() {
+  return getLocalStorage('shelf')
+}
+
+export function saveShelf(shelf) {
+  return setLocalStorage('shelf', shelf)
 }

@@ -52,7 +52,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    margin: -50% 0 0 -50%;
+    margin: 0 0 0 -50%;
     z-index: 2500;
     width: 100%;
     @include center;
