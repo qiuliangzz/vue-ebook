@@ -6,9 +6,11 @@
         <span class="shelf-title-text">{{$t('shelf.title')}}</span>
         <span class="shelf-title-sub-text" v-show="isEditMode">{{selectedText}}</span>
       </div>
+      <!-- 清除缓存 -->
       <div class="shelf-title-btn-wrapper left">
         <span class="shelf-title-btn-text" @click="clearCache">{{$t('shelf.clearCache')}}</span>
       </div>
+      <!-- 编辑 -->
       <div class="shelf-title-btn-wrapper right">
         <span
           class="shelf-title-btn-text"
@@ -21,6 +23,8 @@
 
 <script>
 import { shelfMixin } from "../../utils/mixin";
+import { clearLocalForage } from "../../utils/localForage";
+import { clearLocalStorage } from "../../utils/localStorage";
 export default {
   components: {},
   data() {
@@ -62,7 +66,14 @@ export default {
       this.setIsEditMode(!this.isEditMode);
     },
     // 清除缓存功能
-    clearCache() {}
+    clearCache() {
+      clearLocalStorage();
+      clearLocalForage();
+      this.setShelfList([]);
+      this.setShelfSelected([]);
+      this.getShelfList()
+      this.simpleToast(this.$t("shelf.clearCacheSuccess"))
+    }
   },
   created() {},
   mounted() {}

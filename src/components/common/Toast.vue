@@ -1,9 +1,12 @@
 <!-- 提示信息弹窗组件 -->
 <template>
   <transition name="fade">
-    <div class="toast-bg" v-if="visible">
-      <div class="toast-wrapper">
-        <div class="toast" v-html="showText"></div>
+    <!-- @click.prevent:不允许点击事件 -->
+    <div class="toast-bg-wrapper" @click.prevent v-show="visible">
+      <div class="toast-bg">
+        <div class="toast-wrapper">
+          <div class="toast" v-html="showText"></div>
+        </div>
       </div>
     </div>
   </transition>
@@ -54,26 +57,34 @@ export default {
 
 <style lang="scss" rel="stylesheet/scss" scoped>
 @import "../../assets/styles/global";
-
-.toast-bg {
+.toast-bg-wrapper {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: 0 0 0 -50%;
+  top: 0;
+  left: 0;
   z-index: 2500;
   width: 100%;
-  @include center;
-  .toast-wrapper {
-    width: 60%;
-    line-height: rem(20);
-    padding: rem(10) rem(20);
-    background: #ccc;
-    border-radius: rem(10);
-    font-size: rem(14);
-    color: white;
-    .toast {
-      text-align: center;
-      word-break: break-all;
+  height: 100%;
+  background: transparent;
+  .toast-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0 0 0 -50%;
+    z-index: 2500;
+    width: 100%;
+    @include center;
+    .toast-wrapper {
+      width: 60%;
+      line-height: rem(20);
+      padding: rem(10) rem(20);
+      background: #ccc;
+      border-radius: rem(10);
+      font-size: rem(14);
+      color: white;
+      .toast {
+        text-align: center;
+        word-break: break-all;
+      }
     }
   }
 }

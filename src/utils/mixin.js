@@ -1,8 +1,9 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList } from './book';
 import { addCss, removeAllCss, getReadTimeByMinute } from './utils';
-import { saveLocation, getBookmark } from './localStorage';
-
+import { saveLocation, getBookmark, getShelf, saveShelf } from './localStorage';
+import { appendAddToShelf } from "./shelf";
+import { shelf } from "../api";
 export const ebookMixin = {
   // 计算属性，方法等
   computed: {
@@ -170,6 +171,26 @@ export const shelfMixin = {
       'setShelfTitleVisible',
       'setOffsetY'
     ]),
+    // 获取列表数据
+    getShelfList() {
+      let shelfList = getShelf();
+      if (!shelfList) {
+        shelf().then(response => {
+          if (
+            response.status === 200 &&
+            response.data &&
+            response.data.bookList
+          ) {
+            const { data } = response;
+            shelfList = appendAddToShelf(data.bookList);
+            saveShelf(shelfList);
+            this.setShelfList(shelfList);
+          }
+        });
+      } else {
+        this.setShelfList(shelfList);
+      }
+    },
     // 跳转图书详情页
     showBookDetail(book) {
       this.$router.push({

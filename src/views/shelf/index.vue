@@ -23,8 +23,6 @@ import ShelfSearch from "../../components/shelf/ShelfSearch";
 import ShelfList from "../../components/shelf/ShelfList";
 import ShelfFooter from "../../components/shelf/ShelfFooter";
 import { shelfMixin } from "../../utils/mixin";
-import { shelf } from "../../api";
-import { appendAddToShelf } from "../../utils/shelf";
 
 export default {
   components: {
@@ -52,20 +50,6 @@ export default {
   methods: {
     onScroll(offsetY) {
       this.setOffsetY(offsetY);
-    },
-    // 获取列表数据
-    getShelfList() {
-      shelf().then(response => {
-        if (
-          response.status === 200 &&
-          response.data &&
-          response.data.bookList
-        ) {
-          const { data } = response;
-          console.log(data);
-          this.setShelfList(appendAddToShelf(data.bookList));
-        }
-      });
     }
   },
   created() {

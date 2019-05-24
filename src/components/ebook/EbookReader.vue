@@ -27,6 +27,7 @@ import {
 } from "../../utils/localStorage";
 import Epub from "epubjs";
 import { addCss, flatten } from "../../utils/utils";
+import { getLocalForage } from "../../utils/localForage";
 
 global.ePub = Epub;
 
@@ -41,8 +42,7 @@ export default {
   watch: {},
   methods: {
     // 初始化电子书
-    initEpub() {
-      const url = `${process.env.VUE_APP_RES_URL}/epub/${this.fileName}.epub`;
+    initEpub(url) {
       // 获取电子书book对象
       this.book = new Epub(url);
       this.setCurrentBook(this.book);
@@ -293,9 +293,24 @@ export default {
   created() {},
   mounted() {
     // 获取动态路由参数 this.$route.params.x
-    const fileName = this.$route.params.fileName.split("|").join("/");
-    this.setFileName(fileName).then(() => {
-      this.initEpub();
+    const books = this.$route.params.fileName.split("|");
+    const fileName = books[1];
+    getLocalForage(fileName, (err, blob) => {
+      if (!err && blob) {
+        // 找到离线缓存电子书
+        console.log("找到离线缓存电子书");
+        this.setFileName(books.join("/")).then(() => {
+          this.initEpub(blob);
+        });
+      } else {
+        // 在线获取电子书
+        this.setFileName(books.join("/")).then(() => {
+          const url = `${process.env.VUE_APP_RES_URL}/epub/${
+            this.fileName
+          }.epub`;
+          this.initEpub(url);
+        });
+      }
     });
   }
 };
