@@ -22,8 +22,10 @@
 
 <script>
 import { shelfMixin } from "../../utils/mixin";
-import { saveShelf } from "../../utils/localStorage";
+import { saveShelf, removeLocalStorage } from "../../utils/localStorage";
 import { download } from "../../api";
+import { removeLocalForage } from "../../utils/localForage";
+import { Promise } from "q";
 
 export default {
   components: {},
@@ -160,9 +162,9 @@ export default {
       this.onComplete();
       // 提示文字
       if (isPrivate) {
-        this.toast({ text: this.$t("shelf.setPrivateSuccess") }).show();
+        this.simpleToast(this.$t("shelf.setPrivateSuccess"));
       } else {
-        this.toast({ text: this.$t("shelf.closePrivateSuccess") }).show();
+        this.simpleToast(this.$t("shelf.closePrivateSuccess"));
       }
     },
     // 离线缓存图书
@@ -175,7 +177,7 @@ export default {
           {
             text: !this.isDownload
               ? this.$t("shelf.open")
-              : this.$t("shelf.close"),
+              : this.$t("shelf.delete"),
             click: () => {
               this.setDownload();
             }
@@ -194,11 +196,12 @@ export default {
     async setDownload() {
       this.onComplete();
       if (this.isDownload) {
-        this.toast({ text: this.$t("shelf.removeDownloadSuccess") }).show();
+        this.removeSelectedBook();
       } else {
         // 同步设置,等downloadSelectedBook执行完再执行toast
         await this.downloadSelectedBook();
-        this.toast({ text: this.$t("shelf.setDownloadSuccess") }).show();
+        saveShelf(this.shelfList);
+        this.simpleToast(this.$t("shelf.setDownloadSuccess"));
       }
     },
     // 下载图书，一键缓存到浏览器的indexedDB中
@@ -235,6 +238,25 @@ export default {
             toast.updateText(text);
           }
         );
+      });
+    },
+    // 清除缓存功能
+    removeSelectedBook() {
+      Promise.all(this.shelfSelected.map(book => this.removeBook(book))).then(
+        books => {
+          books.map(book => {
+            book.cache = false;
+          });
+          saveShelf(this.shelfList);
+          this.simpleToast(this.$t("shelf.removeDownloadSuccess"));
+        }
+      );
+    },
+    removeBook(book) {
+      return new Promise((resolve, reject) => {
+        removeLocalStorage(`${book.categoryText}/${book.fileName}-info`);
+        removeLocalForage(`${book.fileName}`, resolve, reject);
+        resolve(book);
       });
     },
     // 移出书架

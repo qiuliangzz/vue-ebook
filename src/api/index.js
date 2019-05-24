@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { setLocalForage } from '../utils/localForage'
+
 export function home() {
   return axios({
     method: 'get',

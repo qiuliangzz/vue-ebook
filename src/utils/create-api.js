@@ -19,6 +19,11 @@ Vue.mixin({
         $props: settings
       })
     },
+    simpleToast(text) {
+      const toast = this.toast({ text: text })
+      toast.show()
+      toast.updateText(text)
+    },
     popup(settings) {
       return this.$createPopup({
         $props: settings
