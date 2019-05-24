@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import '@/assets/styles/icon.css'
 import i18n from './language'
-// mock.js 下载问题，只能使用文本不能使用block对象，使用其他方法使用mock，如vue.config.js文件中进行接口模拟
+// mock.js 下载问题，只能使用文本不能使用Blob对象，使用其他方法使用mock，如vue.config.js文件中进行接口模拟
 // import './mock'
 // 图片懒加载
 import './utils/lazy'

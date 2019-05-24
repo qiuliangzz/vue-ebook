@@ -23,6 +23,8 @@
 <script>
 import { shelfMixin } from "../../utils/mixin";
 import { saveShelf } from "../../utils/localStorage";
+import { download } from "../../api";
+
 export default {
   components: {},
   data() {
@@ -189,38 +191,63 @@ export default {
       this.popupMenu.show();
     },
     // 开启离线功能
-    setDownload() {
-      let isDownload;
-      if (this.isDownload) {
-        isDownload = false;
-      } else {
-        isDownload = true;
-      }
-      this.shelfSelected.forEach(book => {
-        book.cache = isDownload;
-      });
-      this.downloadSelectedBook();
+    async setDownload() {
       this.onComplete();
-      // 提示文字
-      if (isDownload) {
-        this.toast({ text: this.$t("shelf.setDownloadSuccess") }).show();
-      } else {
+      if (this.isDownload) {
         this.toast({ text: this.$t("shelf.removeDownloadSuccess") }).show();
+      } else {
+        // 同步设置,等downloadSelectedBook执行完再执行toast
+        await this.downloadSelectedBook();
+        this.toast({ text: this.$t("shelf.setDownloadSuccess") }).show();
       }
     },
-    // 下载图书
-    downloadSelectedBook() {},
+    // 下载图书，一键缓存到浏览器的indexedDB中
+    async downloadSelectedBook() {
+      for (let i = 0; i < this.shelfSelected.length; i++) {
+        await this.downloadBook(this.shelfSelected[i]).then(book => {
+          book.cache = true;
+        });
+      }
+    },
+    // 重难点
+    downloadBook(book) {
+      // 下载过程中进度弹出框的显示
+      let text = "";
+      const toast = this.toast({ text });
+      toast.continueShow();
+      return new Promise((resolve, reject) => {
+        download(
+          book,
+          book => {
+            toast.remove();
+            resolve(book);
+          },
+          reject,
+          progressEvent => {
+            // 下载进度计算
+            const progress =
+              Math.floor((progressEvent.loaded / progressEvent.total) * 100) +
+              "%";
+            const text = this.$t("shelf.progressDownload").replace(
+              "$1",
+              `${book.fileName}.epub(${progress})`
+            );
+            toast.updateText(text);
+          }
+        );
+      });
+    },
     // 移出书架
     showRemove() {
       // 选一本书和选两本书title文本不一样
       let title;
       if (this.shelfSelected.length === 1) {
-        title = this.$t("shelf.removeBookTitle").repalce(
+        title = this.$t("shelf.removeBookTitle").replace(
           "$1",
           `《${this.shelfSelected.title}》`
         );
       } else {
-        title = this.$t("shelf.removeBookTitle").repalce(
+        title = this.$t("shelf.removeBookTitle").replace(
           "$1",
           this.$t("shelf.selectedBooks")
         );

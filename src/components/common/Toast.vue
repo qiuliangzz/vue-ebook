@@ -3,71 +3,78 @@
   <transition name="fade">
     <div class="toast-bg" v-if="visible">
       <div class="toast-wrapper">
-        <div class="toast" v-html="text"></div>
+        <div class="toast" v-html="showText"></div>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-  export default {
-    name:'toast',
-    props: {
-      text: [String, Number],
-      timeout: {
-        type: Number,
-        default: 1500
-      }
+export default {
+  name: "toast",
+  props: {
+    text: [String, Number],
+    timeout: {
+      type: Number,
+      default: 1500
+    }
+  },
+  data() {
+    return {
+      visible: false,
+      showText: ""
+    };
+  },
+  methods: {
+    hide() {
+      this.visible = false;
     },
-    data() {
-      return {
-        visible: false
-      }
+    show() {
+      this.updateText(this.text);
+      clearTimeout(this.task);
+      this.task = null;
+      this.visible = true;
+      this.task = setTimeout(() => {
+        this.visible = false;
+      }, this.timeout);
     },
-    methods: {
-      hide() {
-        this.visible = false
-      },
-      show() {
-        clearTimeout(this.task)
-        this.task = null
-        this.visible = true
-        this.task = setTimeout(() => {
-          this.visible = false
-        }, this.timeout)
-      },
-      continueShow() {
-        clearTimeout(this.task)
-        this.task = null
-        this.visible = true
-      }
+    // 持续显示
+    continueShow() {
+      clearTimeout(this.task);
+      this.task = null;
+      this.visible = true;
+    },
+    // 更新文本
+    updateText(text) {
+      this.showText = text;
     }
   }
+};
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-  @import "../../assets/styles/global";
+@import "../../assets/styles/global";
 
-  .toast-bg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: 0 0 0 -50%;
-    z-index: 2500;
-    width: 100%;
-    @include center;
-    .toast-wrapper {
-      width: 60%;
-      line-height: rem(20);
-      padding: rem(10) rem(20);
-      background: #ccc;
-      border-radius: rem(10);
-      font-size: rem(14);
-      color: white;
-      .toast {
-        text-align: center;
-        word-break: break-all;
-      }
+.toast-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0 0 0 -50%;
+  z-index: 2500;
+  width: 100%;
+  @include center;
+  .toast-wrapper {
+    width: 60%;
+    line-height: rem(20);
+    padding: rem(10) rem(20);
+    background: #ccc;
+    border-radius: rem(10);
+    font-size: rem(14);
+    color: white;
+    .toast {
+      text-align: center;
+      word-break: break-all;
     }
   }
+}
 </style>
