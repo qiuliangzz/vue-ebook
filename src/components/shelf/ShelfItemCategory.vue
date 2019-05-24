@@ -1,6 +1,6 @@
 <!-- 分类组件 -->
 <template>
-  <div></div>
+  <div class="shelf-item-category"></div>
 </template>
 
 <script>

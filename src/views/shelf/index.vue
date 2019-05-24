@@ -40,6 +40,7 @@ export default {
           response.data.bookList
         ) {
           const { data } = response;
+          console.log(data);
           this.setShelfList(data.bookList);
         }
       });

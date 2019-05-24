@@ -1,6 +1,6 @@
 <!-- 增加组件 -->
 <template>
-  <div></div>
+  <div class="shelf-item-add"></div>
 </template>
 
 <script>

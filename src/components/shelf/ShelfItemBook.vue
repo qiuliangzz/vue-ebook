@@ -1,6 +1,6 @@
 <!-- 图片组件 -->
 <template>
-  <div></div>
+  <div class="shelf-item-book"></div>
 </template>
 
 <script>
