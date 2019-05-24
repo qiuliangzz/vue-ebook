@@ -1,5 +1,6 @@
-// vue-create-api 一个能够让 Vue 组件通过 API 方式调用的插件
-// 弹窗可使用，因为这是在view以外，全局的DOM
+// 一个能够让 Vue 组件通过 API 方式调用的插件
+// 应用场景：弹窗可使用
+// 应用条件：全局的DOM，在view以外
 // 使用的弹窗组件要加name属性
 import Vue from 'vue'
 import CreateAPI from 'vue-create-api'
