@@ -41,19 +41,18 @@ export default {
       flex: 0 0 33.33%;
       width: 33.33%;
       height: 33.33%;
-      &:nth-child(3n+1) {
+      &:nth-child(3n + 1) {
         padding: 0 rem(2.5) rem(5) rem(5);
       }
-      &:nth-child(3n+2) {
+      &:nth-child(3n + 2) {
         padding: 0 rem(2.5) rem(2.5) rem(5);
       }
-      &:nth-child(3n+3) {
+      &:nth-child(3n + 3) {
         padding: 0 rem(5) rem(5) rem(2.5);
       }
       .shelf-item-category-img {
         width: 100%;
         height: 100%;
-
       }
     }
   }
