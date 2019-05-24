@@ -169,6 +169,16 @@ export const shelfMixin = {
       'setShelfSelected',
       'setShelfTitleVisible',
       'setOffsetY'
-    ])
+    ]),
+    // 跳转图书详情页
+    showBookDetail(book) {
+      this.$router.push({
+        path: '/store/detail',
+        query: {
+          fileName: book.fileName,
+          category: book.categoryText
+        }
+      })
+    }
   }
 }

@@ -1,4 +1,4 @@
-<!-- 分类组件 -->
+<!-- 分类书籍封面组件 -->
 <template>
   <div class="shelf-item-category">
     <div class="shelf-item-category-list">

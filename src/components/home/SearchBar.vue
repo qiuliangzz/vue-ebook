@@ -111,10 +111,10 @@ export default {
       } else {
         this.hideShadow();
       }
-      if( this.hotSearchVisible) {
-        this.hideHotSearch()
+      if (this.hotSearchVisible) {
+        this.hideHotSearch();
       } else {
-        this.$router.push('/shelf')
+        this.$router.push("/shelf");
       }
     },
     // 显示翻转卡片

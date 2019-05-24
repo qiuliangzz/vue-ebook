@@ -16,6 +16,7 @@ import ShelfSearch from "../../components/shelf/ShelfSearch";
 import ShelfList from "../../components/shelf/ShelfList";
 import { shelfMixin } from "../../utils/mixin";
 import { shelf } from "../../api";
+import {appendAddToShelf} from "../../utils/shelf"
 export default {
   components: {
     ShelfTitle,
@@ -41,7 +42,7 @@ export default {
         ) {
           const { data } = response;
           console.log(data);
-          this.setShelfList(data.bookList);
+          this.setShelfList(appendAddToShelf(data.bookList));
         }
       });
     }

@@ -1,4 +1,4 @@
-<!-- 图书封面组件 -->
+<!-- 单书封面组件 -->
 <template>
   <div class="shelf-item-book">
     <img class="shelf-item-book-cover" v-lazy="data.cover" alt>

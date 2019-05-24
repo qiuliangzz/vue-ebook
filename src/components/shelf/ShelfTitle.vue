@@ -30,6 +30,7 @@ export default {
   },
   mixins: [shelfMixin],
   computed: {
+    // 选中几本书
     selectedText() {
       const selectNumber = this.shelfSelected ? this.shelfSelected.length : 0;
       return selectNumber <= 0
