@@ -2,10 +2,17 @@
 <template>
   <div class="store-shelf">
     <ShelfTitle></ShelfTitle>
-    <Scroll :top="0" class="shelf-scroll-wrapper" @onScroll="onScroll">
+    <Scroll
+      :top="0"
+      :bottom="srcollBottom"
+      class="shelf-scroll-wrapper"
+      @onScroll="onScroll"
+      ref="scroll"
+    >
       <ShelfSearch></ShelfSearch>
       <ShelfList></ShelfList>
     </Scroll>
+    <ShelfFooter></ShelfFooter>
   </div>
 </template>
 
@@ -14,18 +21,32 @@ import ShelfTitle from "../../components/shelf/ShelfTitle";
 import Scroll from "../../components/common/Scroll";
 import ShelfSearch from "../../components/shelf/ShelfSearch";
 import ShelfList from "../../components/shelf/ShelfList";
+import ShelfFooter from "../../components/shelf/ShelfFooter";
 import { shelfMixin } from "../../utils/mixin";
 import { shelf } from "../../api";
-import {appendAddToShelf} from "../../utils/shelf"
+import { appendAddToShelf } from "../../utils/shelf";
+
 export default {
   components: {
     ShelfTitle,
     Scroll,
     ShelfSearch,
-    ShelfList
+    ShelfList,
+    ShelfFooter
   },
   data() {
-    return {};
+    return {
+      srcollBottom: 0
+    };
+  },
+  watch: {
+    isEditMode(isEditMode) {
+      this.srcollBottom = isEditMode ? 48 : 0;
+      // DOm响应完毕
+      this.$nextTick(() => {
+        this.$refs.scroll.refresh();
+      });
+    }
   },
   mixins: [shelfMixin],
   methods: {

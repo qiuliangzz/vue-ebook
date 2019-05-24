@@ -52,6 +52,13 @@ export default {
   methods: {
     // 编辑功能
     onEditClick() {
+      // 非编辑状态去除选中状态
+      if (!this.isEditMode) {
+        this.setShelfSelected([]);
+        this.shelfList.forEach(item => {
+          item.selected = false;
+        });
+      }
       this.setIsEditMode(!this.isEditMode);
     },
     // 清除缓存功能
