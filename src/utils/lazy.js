@@ -1,4 +1,6 @@
 // 图片懒加载
+// vue文件中将需要懒加载的图片 :src="" 修改为 v-lazy=""
+
 import Vue from 'vue'
 import lazyload from 'vue-lazyload'
 
