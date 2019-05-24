@@ -1,8 +1,8 @@
 <!-- 书架图书列表中的每一个项 -->
 <template>
-  <div class="shelf-item">
+  <div class="shelf-item shelf-item-shadow">
     <!-- 动态组件 -->
-    <component :is="item"></component>
+    <component :is="item" :data="data"></component>
   </div>
 </template>
 
@@ -45,7 +45,8 @@ export default {
 .shelf-item {
   width: 100%;
   height: 100%;
-  background-color: pink;
-  
+  &.shelf-item-shadow {
+    box-shadow: rem(2) rem(2) rem(6) rem(2) rgba(200, 200, 200, 0.3);
+  }
 }
 </style>

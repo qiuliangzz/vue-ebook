@@ -3,6 +3,9 @@
   <div class="shelf-list">
     <div v-for="item in shelfList" :key="item.id" class="shelf-list-item-wrapper">
       <ShelfItem :data="item" :style="{height:itemHeight}"></ShelfItem>
+      <div class="shelf-list-title-wrapper">
+        <span class="shelf-list-title title-small">{{item.title}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -10,7 +13,7 @@
 <script>
 import ShelfItem from "./ShelfItem";
 import { shelfMixin } from "../../utils/mixin";
-import { realPx } from '../../utils/utils';
+import { realPx } from "../../utils/utils";
 export default {
   components: {
     ShelfItem
@@ -23,7 +26,7 @@ export default {
     itemHeight() {
       // w / 250= h / 350
       // h= w* 350/250
-      return ((window.innerWidth-realPx(120)) / 3) * (350 / 250) + "px";
+      return ((window.innerWidth - realPx(120)) / 3) * (350 / 250) + "px";
     }
   },
   methods: {},
@@ -47,6 +50,9 @@ export default {
     flex: 0 0 33.33%;
     width: 33.33%;
     padding: rem(15);
+  }
+  .shelf-list-title-wrapper {
+    margin-top: rem(10);
   }
 }
 </style>
