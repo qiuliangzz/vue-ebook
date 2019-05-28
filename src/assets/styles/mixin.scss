@@ -6,14 +6,17 @@ $ratio: 375 / 10;
   @return $px / $ratio + rem;
 }
 
+// y轴滚动，x轴不能滚动
 @mixin scroll {
   overflow-x: hidden;
   overflow-y: scroll;
+  // 提高移动端滚动性能
   -webkit-overflow-scrolling: touch;
   &::-webkit-scrollbar {
     display: none;
   }
 }
+
 @mixin row {
   display: flex;
   flex-direction: row;

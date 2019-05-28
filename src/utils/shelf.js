@@ -7,7 +7,7 @@ export function appendAddToShelf(list) {
   return list
 }
 
-export function RemoveAddFromShelf(list) {
+export function removeAddFromShelf(list) {
   return list.filter(item => item.type !== 3)
 }
 

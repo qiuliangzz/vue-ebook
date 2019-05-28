@@ -92,6 +92,7 @@ export default {
           this.showDownload();
           break;
         case 3:
+          this.dialog().show();
           break;
         case 4:
           this.showRemove();
