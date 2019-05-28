@@ -9,13 +9,10 @@
         v-for="(item, index) in categoryList"
         :key="index"
         @click="onGroupClick(item)"
-        v-show="(item.edit === 2 && isInGroup) || item.edit !== 2 || !item.edit"
+        v-show="(item.edit === 2 && currentType===2) || item.edit !== 2 || !item.edit"
       >
         <div class="dialog-list-item-text">{{item.title}}</div>
-        <div
-          class="dialog-list-icon-wrapper"
-          v-if="category && item.id ? category.id === item.id : false"
-        >
+        <div class="dialog-list-icon-wrapper" v-if="shelfCategory.id===item.id&&currentType===2">
           <span class="icon-check"></span>
         </div>
       </div>
@@ -50,7 +47,11 @@
 <script>
 import Dialog from "../common/Dialog";
 import { shelfMixin } from "../../utils/mixin";
-import { removeAddFromShelf, appendAddToShelf } from "../../utils/shelf";
+import {
+  removeAddFromShelf,
+  appendAddToShelf,
+  computeId
+} from "../../utils/shelf";
 import { saveShelf } from "../../utils/localStorage";
 
 export default {
@@ -65,12 +66,7 @@ export default {
     };
   },
   mixins: [shelfMixin],
-  props: {
-    isInGroup: {
-      type: Boolean,
-      default: false
-    }
-  },
+  props: {},
   computed: {
     defaultCategory() {
       return [
@@ -123,23 +119,57 @@ export default {
     // 移动（加入）分组
     moveToGroup(group) {
       this.setShelfList(
-        this.shelfList.filter(book => this.shelfSelected.indexOf(book) === -1)
+        // 1. 对选中图书进行过滤
+        this.shelfList.filter(book => {
+          if (book.itemList) {
+            book.itemList = book.itemList.filter(
+              subBook => this.shelfSelected.indexOf(subBook) === -1
+            );
+          }
+          this.shelfSelected.indexOf(book) === -1;
+        })
       ).then(() => {
+        // 2. 把选中的图书加入分组中
         if (group && group.itemList) {
           // 合并数组
           group.itemList = [...group.itemList, ...this.shelfSelected];
         }
-        // 更新id
+        // 3. 更新id，对加入的图书进行重新排序
         group.itemList.forEach((item, index) => {
           item.id = index + 1;
         });
         this.simpleToast(
           this.$t("shelf.moveBookInSuccess").replace("$1", group.title)
         );
+        // 4. 对数据进行保存
         this.onComplete();
       });
     },
-    moveOutFromGroup(item) {},
+    // 移出分组
+    moveOutFromGroup(item) {
+      // 1. 过滤
+      this.setShelfList(
+        this.shelfList.map(book => {
+          if (book.type == 2 && book.itemList) {
+            book.itemList = book.itemList.filter(subBook => !subBook.selected);
+          }
+          return book;
+        })
+      ).then(() => {
+        // 2. 把选中的图书添加到书架的最后
+        // 3. 更新id，对图书进行重新排序
+        const list = computeId(
+          appendAddToShelf(
+            [].concat(removeAddFromShelf(this.shelfList), ...this.shelfSelected)
+          )
+        );
+        this.setShelfList(list).then(() => {
+          this.simpleToast(this.$t("shelf.moveBookOutSuccess"));
+        });
+        // 4. 对数据进行保存
+        this.onComplete();
+      });
+    },
     // 新建分组
     createNewGroup() {
       // 如果分组名为空，直接返回
