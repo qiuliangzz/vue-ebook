@@ -1,8 +1,8 @@
 <!-- 书架图书列表 -->
 <template>
-  <div class="shelf-list">
+  <div class="shelf-list" :style="{top:shelfListTop}">
     <transition-group name="list" tag="div" id="shelf-list">
-      <div v-for="item in shelfList" :key="item.id" class="shelf-list-item-wrapper">
+      <div v-for="item in data" :key="item.id" class="shelf-list-item-wrapper">
         <ShelfItem :data="item" :style="{height:itemHeight}"></ShelfItem>
         <div class="shelf-list-title-wrapper">
           <span class="shelf-list-title title-small">{{item.title}}</span>
@@ -15,7 +15,7 @@
 <script>
 import ShelfItem from "./ShelfItem";
 import { shelfMixin } from "../../utils/mixin";
-import { realPx } from "../../utils/utils";
+import { realPx, rem } from "../../utils/utils";
 export default {
   components: {
     ShelfItem
@@ -23,12 +23,22 @@ export default {
   data() {
     return {};
   },
+  props: {
+    top: {
+      type: Number,
+      default: 94
+    },
+    data: Array
+  },
   mixins: [shelfMixin],
   computed: {
     itemHeight() {
       // w / 250= h / 350
       // h= w* 350/250
       return ((window.innerWidth - realPx(120)) / 3) * (350 / 250) + "px";
+    },
+    shelfListTop() {
+      return rem(this.top) + "rem";
     }
   },
   methods: {},
@@ -41,7 +51,6 @@ export default {
 @import "../../assets/styles/global.scss";
 .shelf-list {
   position: absolute;
-  top: rem(94);
   left: 0;
   z-index: 103;
   width: 100%;
@@ -59,7 +68,7 @@ export default {
         display: none;
       }
       &.list-move {
-        transition: transform .5s
+        transition: transform 0.5s;
       }
       .shelf-list-title-wrapper {
         margin-top: rem(10);

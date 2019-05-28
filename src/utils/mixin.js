@@ -160,7 +160,9 @@ export const shelfMixin = {
       'shelfList',
       'shelfSelected',
       'shelfTitleVisible',
-      'offsetY'
+      'offsetY',
+      'shelfCategory',
+      'currentType'
     ])
   },
   methods: {
@@ -169,9 +171,11 @@ export const shelfMixin = {
       'setShelfList',
       'setShelfSelected',
       'setShelfTitleVisible',
-      'setOffsetY'
+      'setOffsetY',
+      'setShelfCategory',
+      'setCurrentType'
     ]),
-    // 获取列表数据
+    // 获取图书列表数据
     getShelfList() {
       let shelfList = getShelf();
       if (!shelfList) {
@@ -184,12 +188,21 @@ export const shelfMixin = {
             const { data } = response;
             shelfList = appendAddToShelf(data.bookList);
             saveShelf(shelfList);
-            this.setShelfList(shelfList);
+            return this.setShelfList(shelfList);
           }
         });
       } else {
-        this.setShelfList(shelfList);
+        return this.setShelfList(shelfList);
       }
+    },
+    // 获取分类列表数据
+    getCategoryList(title) {
+      this.getShelfList().then(() => {
+        const categoryList = this.shelfList.filter(book =>
+          book.type === 2 && book.title === title
+        )[0]
+        this.setShelfCategory(categoryList)
+      })
     },
     // 跳转图书详情页
     showBookDetail(book) {

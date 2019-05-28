@@ -20,6 +20,8 @@ const book = {
   isEditMode: state => state.bookshelf.isEditMode,
   shelfList: state => state.bookshelf.shelfList,
   shelfSelected: state => state.bookshelf.shelfSelected,
-  shelfTitleVisible: state => state.bookshelf.shelfTitleVisible
+  shelfTitleVisible: state => state.bookshelf.shelfTitleVisible,
+  shelfCategory: state => state.bookshelf.shelfCategory,
+  currentType: state => state.bookshelf.currentType
 };
 export default book;

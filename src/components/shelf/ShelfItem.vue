@@ -62,6 +62,12 @@ export default {
           this.showBookDetail(this.data);
         } else if (this.data.type === 2) {
           // 分类书籍封面
+          this.$router.push({
+            path: "/category",
+            query: {
+              title: this.data.title
+            }
+          });
         } else {
           // 去书城首页
           gotoStoreHome(this);

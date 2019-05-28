@@ -3,11 +3,11 @@
   <transition name="fade">
     <div class="shelf-title" v-show="shelfTitleVisible" :class="{'hide-shadow':ifHideShadow}">
       <div class="shelf-title-text-wrapper">
-        <span class="shelf-title-text">{{$t('shelf.title')}}</span>
+        <span class="shelf-title-text">{{title}}</span>
         <span class="shelf-title-sub-text" v-show="isEditMode">{{selectedText}}</span>
       </div>
       <!-- 清除缓存 -->
-      <div class="shelf-title-btn-wrapper left">
+      <div class="shelf-title-btn-wrapper left" v-if="!ifShowBack">
         <span class="shelf-title-btn-text" @click="clearCache">{{$t('shelf.clearCache')}}</span>
       </div>
       <!-- 编辑 -->
@@ -16,6 +16,10 @@
           class="shelf-title-btn-text"
           @click="onEditClick"
         >{{ isEditMode ? $t('shelf.cancel') : $t('shelf.edit')}}</span>
+      </div>
+      <!-- 返回按钮 -->
+      <div class="shelf-title-btn-wrapper left" v-if="ifShowBack">
+        <span class="icon-back" @click="back"></span>
       </div>
     </div>
   </transition>
@@ -31,6 +35,13 @@ export default {
     return {
       ifHideShadow: true
     };
+  },
+  props: {
+    title: String,
+    ifShowBack: {
+      type: Boolean,
+      default: false
+    }
   },
   mixins: [shelfMixin],
   computed: {
@@ -61,6 +72,11 @@ export default {
         this.setShelfSelected([]);
         this.shelfList.forEach(item => {
           item.selected = false;
+          if (item.itemList) {
+            item.itemList.forEach(subItem => {
+              subItem.selected = false;
+            });
+          }
         });
       }
       this.setIsEditMode(!this.isEditMode);
@@ -71,8 +87,11 @@ export default {
       clearLocalForage();
       this.setShelfList([]);
       this.setShelfSelected([]);
-      this.getShelfList()
-      this.simpleToast(this.$t("shelf.clearCacheSuccess"))
+      this.getShelfList();
+      this.simpleToast(this.$t("shelf.clearCacheSuccess"));
+    },
+    back() {
+      this.$router.go(-1);
     }
   },
   created() {},
@@ -123,6 +142,10 @@ export default {
     }
     .shelf-title-btn-text {
       font-size: rem(14);
+      color: #666;
+    }
+    .icon-back {
+      font-size: rem(20);
       color: #666;
     }
   }

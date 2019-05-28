@@ -28,6 +28,12 @@ export default {
     Scroll,
     Featured
   },
+  data() {
+    return {
+      list: null,
+      total: null
+    };
+  },
   computed: {
     title() {
       if (this.list) {
@@ -45,12 +51,6 @@ export default {
       });
       return num;
     }
-  },
-  data() {
-    return {
-      list: null,
-      total: null
-    };
   },
   methods: {
     // 获取列表

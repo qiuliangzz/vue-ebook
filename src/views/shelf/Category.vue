@@ -1,17 +1,18 @@
-<!-- 书架 -->
+<!-- 分类列表 -->
 <template>
   <div class="store-shelf">
-    <ShelfTitle :title="$t('shelf.title')"></ShelfTitle>
+    <ShelfTitle :title="shelfCategory.title" :ifShowBack="true"></ShelfTitle>
     <Scroll
       :top="0"
       :bottom="srcollBottom"
       class="shelf-scroll-wrapper"
       @onScroll="onScroll"
       ref="scroll"
+      v-if="ifShowList"
     >
-      <ShelfSearch></ShelfSearch>
-      <ShelfList :data="shelfList"></ShelfList>
+      <ShelfList :top="42" :data="shelfCategory.itemList"></ShelfList>
     </Scroll>
+    <div class="store-shelf-empty-view" v-else>{{$t('shelf.groupNone')}}</div>
     <ShelfFooter></ShelfFooter>
   </div>
 </template>
@@ -19,7 +20,6 @@
 <script>
 import ShelfTitle from "../../components/shelf/ShelfTitle";
 import Scroll from "../../components/common/Scroll";
-import ShelfSearch from "../../components/shelf/ShelfSearch";
 import ShelfList from "../../components/shelf/ShelfList";
 import ShelfFooter from "../../components/shelf/ShelfFooter";
 import { shelfMixin } from "../../utils/mixin";
@@ -28,7 +28,6 @@ export default {
   components: {
     ShelfTitle,
     Scroll,
-    ShelfSearch,
     ShelfList,
     ShelfFooter
   },
@@ -36,6 +35,13 @@ export default {
     return {
       srcollBottom: 0
     };
+  },
+  computed: {
+    ifShowList() {
+      return (
+        this.shelfCategory.itemList && this.shelfCategory.itemList.length > 0
+      );
+    }
   },
   watch: {
     isEditMode(isEditMode) {
@@ -52,13 +58,10 @@ export default {
       this.setOffsetY(offsetY);
     }
   },
-  created() {
-    this.getShelfList();
-  },
+  created() {},
   mounted() {
-    // 当前为书架图书列表
-    this.setShelfCategory([]);
-    this.setCurrentType(1);
+    this.getCategoryList(this.$route.query.title);
+    this.setCurrentType(2);
   }
 };
 </script>
@@ -75,6 +78,17 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 101;
+  }
+  .store-shelf-empty-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: rem(14);
+    color: #666;
+    @include center;
     z-index: 101;
   }
 }
