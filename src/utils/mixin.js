@@ -2,7 +2,11 @@ import { mapGetters, mapActions } from 'vuex'
 import { themeList } from './book';
 import { addCss, removeAllCss, getReadTimeByMinute } from './utils';
 import { saveLocation, getBookmark, getShelf, saveShelf } from './localStorage';
-import { appendAddToShelf } from "./shelf";
+import {
+  removeAddFromShelf,
+  appendAddToShelf,
+  computeId
+} from "./shelf";
 import { shelf } from "../api";
 export const ebookMixin = {
   // 计算属性，方法等
@@ -213,6 +217,31 @@ export const shelfMixin = {
           category: book.categoryText
         }
       })
+    },
+    // 移出分组
+    moveOutOfGroup(f) {
+      // 1. 过滤
+      this.setShelfList(
+        this.shelfList.map(book => {
+          if (book.type === 2 && book.itemList) {
+            book.itemList = book.itemList.filter(subBook => !subBook.selected);
+          }
+          return book;
+        })
+      ).then(() => {
+        // 2. 把选中的图书添加到书架的最后
+        // 3. 更新id，对图书进行重新排序
+        const list = computeId(
+          appendAddToShelf(
+            [].concat(removeAddFromShelf(this.shelfList), ...this.shelfSelected)
+          )
+        );
+        this.setShelfList(list).then(() => {
+          this.simpleToast(this.$t("shelf.moveBookOutSuccess"));
+        });
+        // 4. 对数据进行保存
+        if (f) f()
+      });
     }
   }
 }

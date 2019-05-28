@@ -1,7 +1,7 @@
 <!-- 分类列表 -->
 <template>
   <div class="store-shelf">
-    <ShelfTitle :title="shelfCategory.title" :ifShowBack="true"></ShelfTitle>
+    <ShelfTitle :title="shelfCategory.title"></ShelfTitle>
     <Scroll
       :top="0"
       :bottom="srcollBottom"

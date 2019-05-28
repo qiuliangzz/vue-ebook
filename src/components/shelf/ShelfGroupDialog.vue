@@ -20,12 +20,20 @@
     <!-- 新建分组输入框 -->
     <div class="dialog-new-group-wrapper" v-else>
       <div class="dialog-input-title-wrapper">
-        <span class="dialog-input-title">{{$t('shelf.groupName')}}</span>
+        <span class="dialog-input-title">
+          {{showNewGroup
+          ? $t("shelf.editGroupName")
+          : $t('shelf.groupName')}}
+        </span>
       </div>
       <div class="dialog-input-wrapper">
         <div class="dialog-input-inner-wrapper">
           <input type="text" class="dialog-input" v-model="newGroupName" ref="dialogInput">
-          <div class="dialog-input-clear-wrapper" @click="clear" v-show="newGroupName.length > 0">
+          <div
+            class="dialog-input-clear-wrapper"
+            @click="clear"
+            v-show="newGroupName && newGroupName.length > 0"
+          >
             <span class="icon-close-circle-fill"></span>
           </div>
         </div>
@@ -37,7 +45,7 @@
       <div
         class="dialog-btn"
         @click="createNewGroup"
-        :class="{'is-empty': newGroupName.length === 0}"
+        :class="{'is-empty': newGroupName&&newGroupName.length === 0}"
         v-if="ifNewGroup"
       >{{$t('shelf.confirm')}}</div>
     </div>
@@ -47,11 +55,7 @@
 <script>
 import Dialog from "../common/Dialog";
 import { shelfMixin } from "../../utils/mixin";
-import {
-  removeAddFromShelf,
-  appendAddToShelf,
-  computeId
-} from "../../utils/shelf";
+import { removeAddFromShelf, appendAddToShelf } from "../../utils/shelf";
 import { saveShelf } from "../../utils/localStorage";
 
 export default {
@@ -66,7 +70,13 @@ export default {
     };
   },
   mixins: [shelfMixin],
-  props: {},
+  props: {
+    showNewGroup: {
+      type: Boolean,
+      default: false
+    },
+    groupName: String
+  },
   computed: {
     defaultCategory() {
       return [
@@ -94,11 +104,16 @@ export default {
   },
   methods: {
     show() {
+      this.ifNewGroup = this.showNewGroup;
+      this.newGroupName = this.groupName;
       this.$refs.dialog.show();
     },
     hide() {
       this.$refs.dialog.hide();
-      this.ifNewGroup = false;
+      // 优化
+      setTimeout(() => {
+        this.ifNewGroup = false;
+      }, 200);
     },
     // 新建、移出、移动分组
     onGroupClick(item) {
@@ -121,12 +136,14 @@ export default {
       this.setShelfList(
         // 1. 对选中图书进行过滤
         this.shelfList.filter(book => {
+          // 找到分组，并且把选中图书移除掉
           if (book.itemList) {
             book.itemList = book.itemList.filter(
               subBook => this.shelfSelected.indexOf(subBook) === -1
             );
           }
-          this.shelfSelected.indexOf(book) === -1;
+          // 把分组以外，选中的图书
+          return this.shelfSelected.indexOf(book) === -1;
         })
       ).then(() => {
         // 2. 把选中的图书加入分组中
@@ -146,50 +163,39 @@ export default {
       });
     },
     // 移出分组
-    moveOutFromGroup(item) {
-      // 1. 过滤
-      this.setShelfList(
-        this.shelfList.map(book => {
-          if (book.type == 2 && book.itemList) {
-            book.itemList = book.itemList.filter(subBook => !subBook.selected);
-          }
-          return book;
-        })
-      ).then(() => {
-        // 2. 把选中的图书添加到书架的最后
-        // 3. 更新id，对图书进行重新排序
-        const list = computeId(
-          appendAddToShelf(
-            [].concat(removeAddFromShelf(this.shelfList), ...this.shelfSelected)
-          )
-        );
-        this.setShelfList(list).then(() => {
-          this.simpleToast(this.$t("shelf.moveBookOutSuccess"));
-        });
-        // 4. 对数据进行保存
-        this.onComplete();
-      });
+    moveOutFromGroup() {
+      // 混入中的方法
+      this.moveOutOfGroup(this.onComplete);
     },
-    // 新建分组
+    // 新建，修改分组
     createNewGroup() {
       // 如果分组名为空，直接返回
-      if (!this.newGroupName && this.newGroupName.length === 0) {
+      if (!this.newGroupName || this.newGroupName.length === 0) {
         return;
       }
-      // 新建分组对象
-      const group = {
-        id: this.shelfList[this.shelfList.length - 2].id + 1,
-        itemList: [],
-        selected: false,
-        title: this.newGroupName,
-        type: 2
-      };
-      // 把加号排除掉
-      const list = removeAddFromShelf(this.shelfList);
-      list.push(group);
-      this.setShelfList(appendAddToShelf(list)).then(() => {
+      if (this.showNewGroup) {
+        // 修改分组名
+        this.shelfCategory.title = this.newGroupName;
         this.onComplete();
-      });
+      } else {
+        // 新建分组
+        // 新建分组对象
+        const group = {
+          id: this.shelfList[this.shelfList.length - 2].id + 1,
+          itemList: [],
+          selected: false,
+          title: this.newGroupName,
+          type: 2
+        };
+        // 把加号排除掉
+        let list = removeAddFromShelf(this.shelfList);
+        list.push(group);
+        list = appendAddToShelf(list);
+        // 直接移入新建的分组
+        this.setShelfList(list).then(() => {
+          this.moveToGroup(group);
+        });
+      }
     },
     // 完成
     onComplete() {
