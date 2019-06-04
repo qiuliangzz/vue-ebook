@@ -32,6 +32,11 @@ export default new Router({
           path: '/store/detail',
           name: 'detail',
           component: () => import('./views/ebookstore/StoreDetail.vue')
+        },
+        {
+          path: '/store/speaking',
+          name: 'speaking',
+          component: () => import('./views/ebookstore/StoreSpeaking.vue')
         }
       ]
     },

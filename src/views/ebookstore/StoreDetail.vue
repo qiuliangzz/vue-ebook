@@ -78,6 +78,7 @@ import Toast from "../../components/common/Toast";
 import { detail } from "../../api";
 import { rem, realPx } from "../../utils/utils";
 import Epub from "epubjs";
+import { getLocalForage } from "../../utils/localForage";
 
 global.ePub = Epub;
 
@@ -230,7 +231,26 @@ export default {
       });
     },
     // 听书
-    trialListening() {},
+    trialListening() {
+      getLocalForage(this.bookItem.fileName, (err, blob) => {
+        if (!err && blob && blob instanceof Blob) {
+          this.$router.push({
+            path: "/store/speaking",
+            query: {
+              fileName: this.bookItem.fileName
+            }
+          });
+        } else {
+          this.$router.push({
+            path: "/store/speaking",
+            query: {
+              fileName: this.bookItem.fileName,
+              opf: this.opf
+            }
+          });
+        }
+      });
+    },
     itemStyle(item) {
       return {
         marginLeft: (item.deep - 1) * rem(20) + "rem"

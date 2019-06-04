@@ -1,3 +1,5 @@
+import { getLocalStorage } from './localStorage'
+
 // 翻转图片数据
 export const flapCardList = [
   {
@@ -188,6 +190,52 @@ export function showBookDetail(vue, book) {
     query: {
       fileName: book.fileName,
       category: book.categoryText
+    }
+  })
+}
+
+export function flatBookList(bookList) {
+  if (bookList) {
+    let orgBookList = bookList.filter(item => {
+      return item.type !== 3
+    })
+    const categoryList = bookList.filter(item => {
+      return item.type === 2
+    })
+    categoryList.forEach(item => {
+      const index = orgBookList.findIndex(v => {
+        return v.id === item.id
+      })
+      if (item.itemList) {
+        item.itemList.forEach(subItem => {
+          orgBookList.splice(index, 0, subItem)
+        })
+      }
+    })
+    orgBookList.forEach((item, index) => {
+      item.id = index + 1
+    })
+    orgBookList = orgBookList.filter(item => item.type !== 2)
+    return orgBookList
+  } else {
+    return []
+  }
+}
+
+export function findBook(fileName) {
+  const bookList = getLocalStorage('shelf')
+  return flatBookList(bookList).find(item => item.fileName === fileName)
+}
+
+export function filterSelectedBook(list) {
+  return list.filter(book => {
+    if (book.selected) {
+      return false
+    } else {
+      if (book.itemList) {
+        book.itemList = filterSelectedBook(book.itemList)
+      }
+      return true
     }
   })
 }
