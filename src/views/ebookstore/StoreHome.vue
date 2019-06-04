@@ -56,7 +56,7 @@ export default {
     return {
       scrollTop: 94,
       random: null,
-      banner: null,
+      banner: '', // backgroundImage不接受null值，初始设置''
       guessYouLike: null,
       recommend: null,
       featured: null,

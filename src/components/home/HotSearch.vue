@@ -1,3 +1,4 @@
+<!-- 猜你喜欢 -->
 <template>
   <div>
     <div class="hot-search-title">
