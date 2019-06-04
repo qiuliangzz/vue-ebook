@@ -234,7 +234,7 @@ export default {
     // 创建voice
     createVoice(text) {
       // 原生http请求
-      const xmlhttp = new XMLHttpRequest(); 
+      const xmlhttp = new XMLHttpRequest();
       xmlhttp.open(
         "GET",
         `${
