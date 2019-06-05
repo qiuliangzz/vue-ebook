@@ -1,7 +1,8 @@
 <!-- 书城详情页 -->
 <template>
   <div class="book-detail">
-    <detail-title @back="back" :showShelf="true" ref="title"></detail-title>
+    <!-- 头部 -->
+    <DetaiTitle @back="back" :showShelf="true" ref="title"></DetaiTitle>
     <scroll class="content-wrapper" :top="42" :bottom="52" @onScroll="onScroll" ref="scroll">
       <book-info :cover="cover" :title="title" :author="author" :desc="desc"></book-info>
       <div class="book-detail-content-wrapper">
@@ -36,7 +37,7 @@
               class="book-detail-content-item"
               v-for="(item, index) in flatNavigation"
               :key="index"
-              @click="read(item)"
+              @click="readBook()"
             >
               <div
                 class="book-detail-content-navigation-text"
@@ -71,7 +72,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-import DetailTitle from "../../components/detail/DetaiTitle";
+import DetaiTitle from "../../components/detail/DetaiTitle";
 import BookInfo from "../../components/detail/BookInfo";
 import Scroll from "../../components/common/Scroll";
 import Toast from "../../components/common/Toast";
@@ -79,15 +80,37 @@ import { detail } from "../../api";
 import { rem, realPx } from "../../utils/utils";
 import Epub from "epubjs";
 import { getLocalForage } from "../../utils/localForage";
+import { removeFromShelf, addToShelf } from "../../utils/bookstore";
+import { shelfMixin } from "../../utils/mixin";
+import { getShelf, saveShelf } from "../../utils/localStorage";
 
 global.ePub = Epub;
 
 export default {
   components: {
-    DetailTitle,
+    DetaiTitle,
     Scroll,
     BookInfo,
     Toast
+  },
+  mixins: [shelfMixin],
+  data() {
+    return {
+      bookItem: null,
+      book: null,
+      metadata: null,
+      trialRead: null,
+      cover: null,
+      navigation: null,
+      displayed: false,
+      audio: null,
+      randomLocation: null,
+      description: null,
+      toastText: "",
+      trialText: null,
+      categoryText: null,
+      opf: null
+    };
   },
   computed: {
     desc() {
@@ -126,12 +149,14 @@ export default {
       return this.metadata ? this.metadata.creator : "";
     },
     inBookShelf() {
-      if (this.bookItem && this.bookShelf) {
+      if (this.bookItem && this.shelfList) {
         const flatShelf = (function flatten(arr) {
           return [].concat(
-            ...arr.map(v => (v.itemList ? [v, ...flatten(v.itemList)] : v))
+            ...arr.map(item =>
+              item.itemList ? [item, ...flatten(item.itemList)] : item
+            )
           );
-        })(this.bookShelf).filter(item => item.type === 1);
+        })(this.shelfList).filter(item => item.type === 1);
         const book = flatShelf.filter(
           item => item.fileName === this.bookItem.fileName
         );
@@ -141,24 +166,7 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      bookItem: null,
-      book: null,
-      metadata: null,
-      trialRead: null,
-      cover: null,
-      navigation: null,
-      displayed: false,
-      audio: null,
-      randomLocation: null,
-      description: null,
-      toastText: "",
-      trialText: null,
-      categoryText: null,
-      opf: null
-    };
-  },
+
   methods: {
     // 初始化
     init() {
@@ -214,7 +222,17 @@ export default {
         }
       });
     },
-    addOrRemoveShelf() {},
+    // 添加或移出书架
+    addOrRemoveShelf() {
+      if (this.inBookShelf) {
+        this.setShelfList(removeFromShelf(this.bookItem)).then(() => {
+          saveShelf(this.shelfList);
+        });
+      } else {
+        addToShelf(this.bookItem);
+        this.setShelfList(getShelf());
+      }
+    },
     showToast(text) {
       this.toastText = text;
       this.$refs.toast.show();
@@ -222,12 +240,7 @@ export default {
     // 阅读
     readBook() {
       this.$router.push({
-        path: `/ebook/${this.categoryText}|${this.fileName}`
-      });
-    },
-    read(item) {
-      this.$router.push({
-        path: `/ebook/${this.categoryText}|${this.fileName}`
+        path: `/ebook/${this.bookItem.categoryText}|${this.fileName}`
       });
     },
     // 听书
@@ -303,6 +316,9 @@ export default {
   },
   mounted() {
     this.init();
+    if (!this.shelfList || this.shelfList.length === 0) {
+      this.getShelfList();
+    }
   }
 };
 </script>

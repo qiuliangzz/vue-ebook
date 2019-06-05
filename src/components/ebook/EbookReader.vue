@@ -305,9 +305,9 @@ export default {
       } else {
         // 在线获取电子书
         this.setFileName(books.join("/")).then(() => {
-          const url = `${process.env.VUE_APP_RES_URL}/epub/${
+          const url = `${process.env.VUE_APP_EPUB_URL}/${
             this.fileName
-          }.epub`;
+          }.epub`; 
           this.initEpub(url);
         });
       }

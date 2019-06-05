@@ -5,6 +5,6 @@ import list from './bookList'
 import flatList from './bookFlatList'
 
 Mock.mock(/\/book\/home/, 'get', home)
-Mock.mock(/\/shelf/, 'get', shelf)
+Mock.mock(/\/book\/shelf/, 'get', shelf)
 Mock.mock(/\/book\/list/, 'get', list)
 Mock.mock(/\/book\/flatList/, 'get', flatList)

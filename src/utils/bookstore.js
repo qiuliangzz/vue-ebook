@@ -1,5 +1,5 @@
-import { getLocalStorage } from './localStorage'
-
+import { appendAddToShelf, removeAddFromShelf, computeId } from "./shelf"
+import { getShelf, saveShelf, getLocalStorage } from "./localStorage";
 // 翻转图片数据
 export const flapCardList = [
   {
@@ -237,5 +237,27 @@ export function filterSelectedBook(list) {
       }
       return true
     }
+  })
+}
+
+// 添加到书架
+export function addToShelf(book) {
+  let shelfList = getShelf()
+  shelfList = removeAddFromShelf(shelfList)
+  book.type = 1
+  shelfList.push(book)
+  shelfList = computeId(shelfList)
+  shelfList = appendAddToShelf(shelfList)
+  saveShelf(shelfList)
+}
+// 移出书架
+export function removeFromShelf(book) {
+  let shelfList = getShelf()
+  // 把没有重复的书保留下来
+  return shelfList.filter(item => {
+    if (item.itemList) {
+      item.itemList = removeAddFromShelf(item.itemList)
+    }
+    return item.fileName !== book.fileName
   })
 }
