@@ -6,7 +6,7 @@
     </div>
     <div class="right">
       <div class="icon-wrapper">
-        <span class="icon-shelf"></span>
+        <span class="icon-shelf" @click="showBookShelf"></span>
       </div>
       <div class="icon-wrapper">
         <span class="icon-cart"></span>
@@ -20,6 +20,7 @@
 
 <script>
 import { ebookMixin } from "../../utils/mixin";
+import { maxHeaderSize } from "http";
 
 export default {
   components: {},
@@ -29,7 +30,10 @@ export default {
   mixins: [ebookMixin],
   methods: {
     back() {
-      this.$router.go(-1)
+      this.$router.go(-1);
+    },
+    showBookShelf() {
+      this.$router.push("/shelf");
     }
   },
   created() {},
@@ -46,7 +50,7 @@ export default {
   width: 100%;
   height: rem(48);
   background: white;
-  z-index: 999;
+  z-index: 200;
   box-shadow: 0 rem(8) rem(8) rgba(0, 0, 0, 0.15);
   font-size: rem(20);
   .left {

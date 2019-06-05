@@ -50,7 +50,7 @@
           :style="contentItemStyle(item)"
           @click="displayContents(item.href)"
         >{{item.label}}</span>
-        <!-- <span class="slide-contents-item-page">{{item.label}}</span> -->
+        <span class="slide-contents-item-page">{{item.page}}</span>
       </div>
     </Scroll>
     <Scroll class="slide-search-list" :top="66" :bottom="48" v-show="searchVisible">
@@ -239,8 +239,11 @@ export default {
         line-height: rem(16); // 使英文显示完全
         @include ellipsis;
       }
-      /* .slide-contents-item-page {
-      } */
+      .slide-contents-item-page {
+        flex: 0 0 rem(30);
+        font-size: rem(10);
+        @include right;
+      }
     }
   }
   .slide-search-list {

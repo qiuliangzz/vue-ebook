@@ -34,8 +34,8 @@ global.ePub = Epub;
 export default {
   components: {},
   data() {
-    // 这里存放数据
-    return {};
+    return {
+    };
   },
   // 混合
   mixins: [ebookMixin],
@@ -98,7 +98,6 @@ export default {
         ]).then(() => {});
       });
     },
-
     // 初始化字号，离线缓存
     initFontSize() {
       let fontSize = getFontSize(this.fileName);
@@ -250,7 +249,6 @@ export default {
         this.hideTitleAndMenu();
       }
     },
-
     // 切换显示标题栏和底部栏
     toggleTitleAndMenu() {
       // this.$store.dispatch("setMenuVisible", !this.menuVisible);
@@ -325,7 +323,7 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 150;
+    z-index: 100;
     width: 100%;
     height: 100%;
     background: transparent;

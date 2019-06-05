@@ -66,7 +66,7 @@ export default {
     position: absolute;
     bottom: 0;
     left: 0;
-    z-index: 999;
+    z-index: 200;
     display: flex;
     width: 100%;
     height: rem(48);
